@@ -2,7 +2,17 @@
   "name": "itpm_assignment_1",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:headed": "npx playwright test --headed",
+    "test:chromium": "npx playwright test --project=chromium",
+    "test:firefox": "npx playwright test --project=firefox",
+    "test:webkit": "npx playwright test --project=webkit",
+    "test:debug": "npx playwright test --debug",
+    "test:report": "npx playwright show-report",
+    "test:singlish": "npx playwright test tests/singlish-to-sinhala.spec.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nadeera11/ITPM-Assignment-1.git"
