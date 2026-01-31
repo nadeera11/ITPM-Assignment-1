@@ -656,20 +656,27 @@ test('Neg_Fun_0010: Only numbers and symbols', async ({ page }) => {
 
 //testcase: Pos_UI_0010
 
-test('Pos_UI_0010: Sinhala output preserves line breaks for multi-line input', async ({ page }) => {
+test('Pos_UI_0009: Sinhala output updates automatically in real-time', async ({ page }) => {
   await page.goto('https://www.swifttranslator.com/', { waitUntil: 'domcontentloaded' });
 
-  const singlishInput = 'mama gedhara yanavaa.\n oyaa enne naedhdha?';
-  const expectedLine1 = 'මම ගෙදර යනවා.';
-  const expectedLine2 = 'ඔයා එන්නෙ නැද්ද?';
+  const singlishInput = 'mama gedhara yanavaa';
+  const expectedSinhalaFull = 'මම ගෙදර යනවා';
 
   const inputField = page.locator('[placeholder="Input Your Singlish Text Here."]');
   await expect(inputField).toBeVisible();
 
-  await inputField.fill('');
-  await inputField.pressSequentially(singlishInput, { delay: 60 });
-
   const outputField = page.locator('text=Sinhala').locator('..').locator('div').nth(1);
-  await expect(outputField).toContainText(expectedLine1, { timeout: 10000 });
-  await expect(outputField).toContainText(expectedLine2, { timeout: 10000 });
+
+  await inputField.fill('');
+
+  await inputField.pressSequentially('mama gedhara', { delay: 80 });
+  await expect(outputField).not.toHaveText('', { timeout: 10000 });
+
+  const partialOutput = (await outputField.textContent())?.trim() ?? '';
+
+  await inputField.pressSequentially(' yanavaa', { delay: 80 });
+  await expect(outputField).toContainText(expectedSinhalaFull, { timeout: 10000 });
+
+  const finalOutput = (await outputField.textContent())?.trim() ?? '';
+  expect(finalOutput).not.toBe(partialOutput);
 });
